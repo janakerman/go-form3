@@ -12,13 +12,13 @@ install-swagger:
 download-swagger:
 	@mkdir swagger || true
 	curl -s https://api-docs.form3.tech/assets/form3-swagger.yaml -o swagger/form3-swagger-raw.yaml
-	yq r swagger/form3-swagger-raw.yaml paths | grep -v "^   .*" | tr '\n' 'X' | sed -e 's/\(\/[^X]*\):X *\([^:]*\):/paths.\1.\2.OperationId: TODO/g' | tr 'X' '\n' > swagger/paths.txt
+	/usr/local/Cellar/yq/2.4.1/bin/yq r swagger/form3-swagger-raw.yaml paths | grep -v "^   .*" | tr '\n' 'X' | sed -e 's/\(\/[^X]*\):X *\([^:]*\):/paths.\1.\2.OperationId: TODO/g' | tr 'X' '\n' > swagger/paths.txt
 
 
 modify-swagger-file: download-swagger
-	yq w swagger/form3-swagger-raw.yaml -s operationNames.txt > swagger/form3-swagger-updated.yaml
-	yq d -i swagger/form3-swagger-updated.yaml definitions.ReportLinks
-	yq d -i swagger/form3-swagger-updated.yaml definitions.ReportDetailsResponse.properties.links
+	/usr/local/Cellar/yq/2.4.1/bin/yq w swagger/form3-swagger-raw.yaml -s operationNames.txt > swagger/form3-swagger-updated.yaml
+	/usr/local/Cellar/yq/2.4.1/bin/yq d -i swagger/form3-swagger-updated.yaml definitions.ReportLinks
+	/usr/local/Cellar/yq/2.4.1/bin/yq d -i swagger/form3-swagger-updated.yaml definitions.ReportDetailsResponse.properties.links
 
 generate-client: modify-swagger-file
 	@rm -r pkg/generated || true
